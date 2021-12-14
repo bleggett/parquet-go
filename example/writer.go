@@ -56,7 +56,7 @@ func main() {
 		log.Println("WriteStop error", err)
 		return
 	}
-	log.Println("Write Finished")
+	log.Println("Write Finished - writer.go")
 	w.Close()
 
 	///read

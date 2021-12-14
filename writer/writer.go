@@ -7,6 +7,7 @@ import (
 	"io"
 	"reflect"
 	"sync"
+	"log"
 
 	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/xitongsys/parquet-go-source/writerfile"
@@ -384,6 +385,8 @@ func (pw *ParquetWriter) Flush(flag bool) error {
 		rowGroup.RowGroupHeader.NumRows = pw.NumRows
 		pw.NumRows = 0
 
+
+		log.Println("Write columns")
 		for k := 0; k < len(rowGroup.Chunks); k++ {
 			rowGroup.Chunks[k].ChunkHeader.MetaData.DataPageOffset = -1
 			rowGroup.Chunks[k].ChunkHeader.FileOffset = pw.Offset
