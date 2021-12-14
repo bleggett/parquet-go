@@ -12,7 +12,7 @@ import (
 )
 
 type JSONEncWriter struct {
-	ParquetWriter
+	EncryptedParquetWriter
 }
 
 func NewJSONEncWriterFromWriter(jsonSchema string, w io.Writer, np int64) (*JSONWriter, error) {
@@ -21,9 +21,9 @@ func NewJSONEncWriterFromWriter(jsonSchema string, w io.Writer, np int64) (*JSON
 }
 
 //Create JSON writer
-func NewJSONEncWriter(jsonSchema string, pfile source.ParquetFile, np int64) (*JSONWriter, error) {
+func NewJSONEncWriter(jsonSchema string, pfile source.ParquetFile, np int64) (*JSONEncWriter, error) {
 	var err error
-	res := new(JSONWriter)
+	res := new(JSONEncWriter)
 	res.SchemaHandler, err = schema.NewSchemaHandlerFromJSON(jsonSchema)
 	if err != nil {
 		return res, err
@@ -36,7 +36,7 @@ func NewJSONEncWriter(jsonSchema string, pfile source.ParquetFile, np int64) (*J
 	res.PagesMapBuf = make(map[string][]*layout.Page)
 	res.DictRecs = make(map[string]*layout.DictRecType)
 	res.NP = np
-	res.Footer = parquet.NewFileMetaData()
+	res.Footer = parquet.NewFileCryptoMetaData()
 	res.Footer.Version = 1
 	res.Footer.Schema = append(res.Footer.Schema, res.SchemaHandler.SchemaElements...)
 	res.Offset = 4
